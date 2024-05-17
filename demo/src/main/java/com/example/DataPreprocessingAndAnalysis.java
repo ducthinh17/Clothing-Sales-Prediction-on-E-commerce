@@ -1,27 +1,33 @@
 package com.example;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvValidationException;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
+import com.opencsv.exceptions.CsvValidationException;
+
 public class DataPreprocessingAndAnalysis {
     public static void main(String[] args) throws FileNotFoundException, IOException, CsvException {
-        String inputFilePath = ".\\Data Mining Project\\data\\summer-products-with-rating-and-performance_2020-08.csv";
-        String outputFilePath = ".\\Data Mining Project\\data\\cleaned_data.csv";
+        String inputFilePath = "C:/Users/Admin/Desktop/DATA MINING/Clothing-Sales-Prediction-on-E-commerce-main/data/summer-products-with-rating-and-performance_2020-08.csv";
+        String outputFilePath = "C:/Users/Admin/Desktop/DATA MINING/Clothing-Sales-Prediction-on-E-commerce-main/data/cleaned_data.csv";
         String columnToEncode = "product_color";
-
-        // Define columns to drop
         Set<String> columnsToDrop = new HashSet<>(Arrays.asList(
             "title", "title_orig", "currency_buyer", "shipping_option_name", "urgency_text",
             "merchant_title", "merchant_name", "merchant_info_subtitle", "merchant_id",
