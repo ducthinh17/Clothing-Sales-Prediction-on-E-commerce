@@ -94,10 +94,10 @@ public class DataPreprocessingAndAnalysis {
                 String[] row = allData.get(i);
 
                 try {
-                    double price = Double.parseDouble(row[2]);
+                    double price = Double.parseDouble(row[0]);
                     prices.add(price);
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid price format at row " + i + ": " + row[2]);
+                    System.out.println("Invalid price format at row " + i + ": " + row[0]);
                 }
             }
 
