@@ -11,7 +11,7 @@ import weka.filters.unsupervised.attribute.Add;
 public class RatingClassification {
     public static void main(String[] args) throws Exception {
         // Load dataset
-        DataSource source = new DataSource("C:/Users/Admin/Desktop/DATA MINING/Clothing-Sales-Prediction-on-E-commerce-main/data/cleaned_data.arff");
+        DataSource source = new DataSource("./data/cleaned_data.arff");
         Instances dataset = source.getDataSet();
         
         // Assuming the 'rating' attribute is at a specific index, change as needed
