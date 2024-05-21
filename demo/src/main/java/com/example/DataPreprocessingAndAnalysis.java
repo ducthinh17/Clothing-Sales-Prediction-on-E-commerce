@@ -6,6 +6,7 @@ import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics; 
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,6 +15,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
 
 public class DataPreprocessingAndAnalysis {
     public static void main(String[] args) throws FileNotFoundException, IOException, CsvException {
@@ -81,56 +88,74 @@ public class DataPreprocessingAndAnalysis {
         }
 
         try (CSVReader reader = new CSVReader(new FileReader(outputFilePath))) {
-            List<String[]> allData = reader.readAll();
-            if (allData.size() <= 1) {
-                System.out.println("No data available for analysis.");
-                return;
+            List<String[]> records = reader.readAll();
+            DescriptiveStatistics priceStats = new DescriptiveStatistics();
+            double[] unitsSoldValues = new double[records.size() - 1];
+            double[] ratingValues = new double[records.size() - 1];
+            
+            // Identify the indices for 'price', 'units_sold' and 'rating' columns
+            String[] headers = records.get(0);
+            int priceIndex = -1, unitsSoldIndex = -1, ratingIndex = -1;
+            for (int i = 0; i < headers.length; i++) {
+                if (headers[i].equals("price")) {
+                    priceIndex = i;
+                } else if (headers[i].equals("units_sold")) {
+                    unitsSoldIndex = i;
+                } else if (headers[i].equals("rating")) {
+                    ratingIndex = i;
+                }    
             }
-            
-            List<Double> prices = new ArrayList<>();
-            
-            // Skip header row
-            for (int i = 1; i < allData.size(); i++) {
-                String[] row = allData.get(i);
 
-                try {
-                    double price = Double.parseDouble(row[0]);
-                    prices.add(price);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid price format at row " + i + ": " + row[0]);
+            for (int i = 1; i < records.size(); i++) {
+                String[] row = records.get(i);
+                if (priceIndex != -1) {
+                    double price = Double.parseDouble(row[priceIndex]);
+                    priceStats.addValue(price);
+                }
+                if (unitsSoldIndex != -1) {
+                    double unitsSold = Double.parseDouble(row[unitsSoldIndex]);
+                    unitsSoldValues[i - 1] = unitsSold;
+                }
+                if (ratingIndex != -1) {
+                    double rating = Double.parseDouble(row[ratingIndex]);
+                    ratingValues[i - 1] = rating;
                 }
             }
 
-            // Calculate and display statistics for prices
-            if (!prices.isEmpty()) {
-                Collections.sort(prices);
-                double median = calculateMedian(prices);
-                double mean = prices.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-                double stdDev = calculateStandardDeviation(prices, mean);
-                System.out.println("Average Price: $" + mean);
-                System.out.println("Median Price: $" + median);
-                System.out.println("Standard Deviation of Prices: $" + stdDev);
-            } else {
-                System.out.println("No valid price data available.");
-            }
-        }
-    }
+            System.out.println("Price - Mean: " + priceStats.getMean());
+            System.out.println("Price - Median: " + priceStats.getPercentile(50));
+            System.out.println("Price - Standard Deviation: " + priceStats.getStandardDeviation());
+            System.out.println("Price - Variance: " + priceStats.getVariance());
 
-    private static double calculateMedian(List<Double> prices) {
-        int middle = prices.size() / 2;
-        if (prices.size() % 2 == 0) {
-            return (prices.get(middle - 1) + prices.get(middle)) / 2.0;
-        } else {
-            return prices.get(middle);
-        }
-    }
+            // Create a histogram for 'units_sold'
+            HistogramDataset us = new HistogramDataset();
+            us.setType(HistogramType.RELATIVE_FREQUENCY);
+            us.addSeries("Units Sold", unitsSoldValues, 10); // 10 bins
 
-    private static double calculateStandardDeviation(List<Double> prices, double mean) {
-        double sum = 0.0;
-        for (double price : prices) {
-            sum += Math.pow(price - mean, 2);
+            JFreeChart unitsSoldHistogram = ChartFactory.createHistogram(
+                "Units Sold Distribution",
+                "Units Sold",
+                "Frequency",
+                us
+            );
+
+            // Create a histogram for 'rating'
+            HistogramDataset ratingData = new HistogramDataset();
+            ratingData.setType(HistogramType.RELATIVE_FREQUENCY);
+            ratingData.addSeries("Rating", ratingValues, 10); // 10 bins
+
+            JFreeChart ratingHistogram = ChartFactory.createHistogram(
+                "Rating Distribution",
+                "Rating",
+                "Frequency",
+                ratingData
+            );
+
+            // Save the histogram as a PNG file
+            ChartUtils.saveChartAsPNG(new java.io.File("units_sold_histogram.png"), unitsSoldHistogram, 500, 300);
+            ChartUtils.saveChartAsPNG(new java.io.File("rating_histogram.png"), ratingHistogram, 500, 300);
+            
         }
-        return Math.sqrt(sum / prices.size());
     }
 
     private static List<String[]> oneHotEncode(List<String[]> data, String columnToEncode) {
