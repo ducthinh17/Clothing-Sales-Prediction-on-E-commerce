@@ -13,14 +13,14 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-public class LinearRegressionModel {
+public class LinearRegressionModel2 {
 
     public static void main(String[] args) {
         try {
             // Load the dataset
             String filePath = "./Clothing-Sales-Prediction-on-E-commerce/data/cleaned_data.arff";
             File dataFile = new File(filePath);
-            
+
             if (!dataFile.exists()) {
                 System.err.println("File not found: " + filePath);
                 return;
@@ -37,17 +37,23 @@ public class LinearRegressionModel {
             int priceIndex = data.attribute("price").index();
             data.setClassIndex(priceIndex);
 
-            // Create and configure Linear Regression
-            LinearRegression lr = new LinearRegression();
-            lr.setOptions(new String[] { "-S", "1" }); // Use a method selection for minimizing the error function
+            // Randomize the data
+            data.randomize(new Random(1));
 
-            // Randomize and split the data
-            data.randomize(new java.util.Random(1));
-            int trainSize = (int) (data.numInstances() * 0.7);
-            int testSize = data.numInstances() - trainSize;
+            // Split the data into training (80%), testing (20%), and validation (last 10
+            // records)
+            int validationSize = 10;
+            int totalSize = data.numInstances();
+            int testSize = (int) (totalSize * 0.2);
+            int trainSize = totalSize - testSize - validationSize;
 
             Instances train = new Instances(data, 0, trainSize);
             Instances test = new Instances(data, trainSize, testSize);
+            Instances validation = new Instances(data, totalSize - validationSize, validationSize);
+
+            // Create and configure Linear Regression
+            LinearRegression lr = new LinearRegression();
+            lr.setOptions(new String[] { "-S", "1" }); // Use a method selection for minimizing the error function
 
             // Build and evaluate the model
             lr.buildClassifier(train);
@@ -58,12 +64,15 @@ public class LinearRegressionModel {
 
             // Print model and evaluation results
             System.out.println(lr);
-            // Print the evaluation results
-            System.out.println(eval.toSummaryString("\nResults\n======\n", false) + "\nR^2: "
-                    + eval.correlationCoefficient() * eval.correlationCoefficient() + "\n");
+            System.out.println(eval.toSummaryString("\nResults\n======\n", false));
+            System.out.println("R^2: " + (eval.correlationCoefficient() * eval.correlationCoefficient()));
+            System.out.println("Mean Absolute Error (MAE): " + eval.meanAbsoluteError());
+            System.out.println("Root Mean Squared Error (RMSE): " + eval.rootMeanSquaredError());
+            System.out.println("Relative Absolute Error: " + eval.relativeAbsoluteError() + "%");
+            System.out.println("Root Relative Squared Error: " + eval.rootRelativeSquaredError() + "%\n");
 
-            System.out.println("Actual Value - Linear Regression Model Predicted - Residual");
             // Output residuals for inspection
+            System.out.println("Actual Value - Linear Regression Model Predicted - Residual");
             for (int i = 0; i < test.numInstances(); i++) {
                 double obs = test.instance(i).classValue();
                 double pred = lr.classifyInstance(test.instance(i));
@@ -71,7 +80,16 @@ public class LinearRegressionModel {
                 System.out.println(obs + "                " + pred + "          " + residual);
             }
 
-            // Visualizing the results
+            // Output predictions for the validation set
+            System.out.println("Validation Set Predictions:");
+            System.out.println("Actual Value - Predicted Value");
+            for (int i = 0; i < validation.numInstances(); i++) {
+                double actual = validation.instance(i).classValue();
+                double predicted = lr.classifyInstance(validation.instance(i));
+                System.out.println(actual + "          " + predicted);
+            }
+
+            // Visualize the results
             visualize(lr, train, test);
         } catch (Exception e) {
             e.printStackTrace();
