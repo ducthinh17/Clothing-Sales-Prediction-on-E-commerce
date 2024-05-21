@@ -145,17 +145,12 @@ public class WekaJ48 {
         }
 
         // Print the evaluation results
-        System.out.println(eval.toSummaryString("\nResults\n======\n", false));
-
-        // Print the confusion matrix
+        System.out.println("Detailed Classification Results:");
+        System.out.println(eval.toClassDetailsString());
+        System.out.println("Summary of Accuracy:");
+        System.out.println(eval.toSummaryString());
         System.out.println("Confusion Matrix:");
-        double[][] confusionMatrix = eval.confusionMatrix();
-        for (double[] row : confusionMatrix) {
-            for (double element : row) {
-                System.out.print(element + " ");
-            }
-            System.out.println();
-        }
+        System.out.println(eval.toMatrixString());
     }
 }
 
