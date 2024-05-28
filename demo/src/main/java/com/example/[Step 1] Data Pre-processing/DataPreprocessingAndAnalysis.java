@@ -1,4 +1,4 @@
-package com.example;
+package com.example.[Step 1] Data Pre-processing;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 public class DataPreprocessingAndAnalysis {
     public static void main(String[] args) throws FileNotFoundException, IOException, CsvException {
-        String inputFilePath = ".\\Data Mining Project\\data\\summer-products-with-rating-and-performance_2020-08.csv";
-        String outputFilePath = ".\\Data Mining Project\\data\\cleaned_data.csv";
+        String inputFilePath = "E:\\Clothing-Sales-Prediction-on-E-commerce\\data\\summer-products-with-rating-and-performance_2020-08.csv";
+        String outputFilePath = "E:\\Clothing-Sales-Prediction-on-E-commerce\\data\\cleaned_data.csv";
         String columnToEncode = "product_color";
 
         // Define columns to drop
