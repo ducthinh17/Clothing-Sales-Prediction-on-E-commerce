@@ -18,9 +18,14 @@ This repository contains the code and documentation for the data mining project 
 
 ## Introduction
 
-In recent years, e-commerce platforms have emerged as significant disruptors, transforming traditional physical transactions into online interactions. This project aims to analyze sales data of summer clothes on an e-commerce platform and predict sales performance using machine learning algorithms.
+In recent years, e-commerce platforms have emerged as a significant disruptor, transforming traditional physical transactions into online interactions. This shift is particularly noticeable in the developing world, where entrepreneurs are leveraging these platforms to optimize their businesses, accelerate development, and access new market segments.
 
-The dataset used in this project contains 43 columns, including product listings, ratings, and sales performance metrics.
+Understanding how markets operate is a critical component of planning an effective business model. The supply and demand theory posits that price is the primary factor driving the quantity sold, assuming other variables remain constant. Therefore, examining how markets interact to achieve maximum sales and profit is essential.
+
+Given this context, our group has selected the dataset "Sales of Summer Clothes in E-
+commerce Wish" for our project. This dataset comprises 43 columns, containing product listings, product ratings, and sales performance metrics.
+
+![The overview of our dataset.](Picture/Picture13.jpg)
 
 ## Data Pre-processing
 
@@ -37,11 +42,23 @@ The dataset used in this project contains 43 columns, including product listings
 ### Data Analysis
 
 - Created visualizations to analyze units sold distribution, rating distribution, and price distribution.
+
+![The bar chart of units sold distribution.](Picture/Picture2.png)
+![The bar chart rating distribution.](Picture/Picture3.png)
+
 - Used box plots to compare rating distributions across different sales categories.
+
+![The boxplot of rating distribution across sales categories](Picture/Picture4.png)
 
 ## Prediction Algorithms
 
 Implemented prediction models using the Weka library to classify products into "slow," "stable," and "hot" categories based on their sales performance. Evaluated various algorithms, including Decision Tree, SMO, Linear Regression, Naive Bayes, and Random Forest, focusing on Naive Bayes and Random Forest due to their higher accuracy.
+### The categorization criteria are as follows:
+- **"Slow"**: Instances with units_sold values less than or equal to Q1 (the 25th percentile).
+- **"Stable"**: Instances with units_sold values greater than Q1 but less than or equal to Q3 (the 75th percentile).
+- **"Hot"**: Instances with units_sold values greater than Q3.
+
+![The quartile distribution.](Picture/Picture5.png)
 
 ## Model Evaluation
 
@@ -53,6 +70,8 @@ Implemented prediction models using the Weka library to classify products into "
 - Root Mean Squared Error (RMSE): 0.3347
 - Runtime: 15 seconds
 
+![The Naïve Bayes result.](Picture/Picture6.jpg)
+![The Naïve Bayes result.](Picture/Picture7.png)
 ### Random Forest Evaluation Results
 
 - Achieved an accuracy of 85.7143%
@@ -61,13 +80,26 @@ Implemented prediction models using the Weka library to classify products into "
 - Root Mean Squared Error (RMSE): 0.2444
 - Runtime: 15 seconds
 
+![The Random Forest result.](Picture/Picture8.png)
+
 ### Comparison
 
 The Random Forest model outperformed the Naive Bayes model in terms of accuracy, Kappa statistic, and error rates. However, Naive Bayes had a shorter runtime for both training and prediction.
 
+![Accuracy Comparison](Picture/Picture9.png)
+![Kappa Statistic Comparison](Picture/Picture10.png)
+![Root Mean Squared Erroor Comparison](Picture/Picture11.png)
+![Mean Absolute Error Comparison](Picture/Picture12.png)
+
 ## Conclusion
 
-The Random Forest algorithm is the superior model for predicting sales performance in this project, offering higher accuracy and better overall performance metrics compared to Naive Bayes.
+Based on the evaluation, the Random Forest algorithm outperforms the Naive Bayes algorithm in several aspects:
+- **Accuracy**: Random Forest achieved an accuracy of 85.7143%, higher than the 81.4672% achieved by Naive Bayes.
+- **Kappa Statistic**: The Kappa statistic for Random Forest (0.7777) is higher than that for Naive Bayes (0.7106), indicating better agreement between predicted and actual classifications.
+- **Error Rates**: Random Forest has lower Mean Absolute Error (0.1194 vs. 0.1219) and Root Mean Squared Error (0.2444 vs. 0.3347), reflecting more accurate predictions.
+- **Confusion Matrix**: Random Forest shows fewer misclassifications across the classes compared to Naive Bayes.
+
+Overall, the Random Forest algorithm is the better model for this prediction task, offering higher accuracy and better overall performance metrics.
 
 ## References
 
