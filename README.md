@@ -31,7 +31,7 @@ The dataset used in this project contains 43 columns, including product listings
 3. **Handling Missing Values**: Addressed missing values by filling numerical values with the mean and categorical values with the most frequent value or 'Unknown'.
 4. **Normalizing**: Standardized values in categorical columns to ensure consistency.
 5. **Normalizing Color Variations**: Standardized color names and created binary columns for color representation.
-
+![Data Sample](image.png)
 ### Data Analysis
 
 - Created visualizations to analyze units sold distribution, rating distribution, and price distribution.
