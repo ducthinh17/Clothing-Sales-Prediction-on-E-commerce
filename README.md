@@ -52,13 +52,32 @@ commerce Wish" for our project. This dataset comprises 43 columns, containing pr
 
 ## Prediction Algorithms
 
-Implemented prediction models using the Weka library to classify products into "slow," "stable," and "hot" categories based on their sales performance. Evaluated various algorithms, including Decision Tree, SMO, Linear Regression, Naive Bayes, and Random Forest, focusing on Naive Bayes and Random Forest due to their higher accuracy.
-### The categorization criteria are as follows:
-- **"Slow"**: Instances with units_sold values less than or equal to Q1 (the 25th percentile).
-- **"Stable"**: Instances with units_sold values greater than Q1 but less than or equal to Q3 (the 75th percentile).
-- **"Hot"**: Instances with units_sold values greater than Q3.
+The following section provides an in-depth examination of the implementation of the prediction of `Unit_Sold` Java class, which leverages the Weka library to classify product ratings. The primary objective is to categorize products into three groups: "slow," "stable," and "hot," based on their attributes. Various algorithms were evaluated, including Decision Tree, SMO, and Linear Regression, but Naive Bayes and Random Forest demonstrated the highest accuracy.
+
+### Implementation Steps
+
+1. **Loading the Dataset**: Import the dataset from the specified ARFF file into an Instances object.
+2. **Calculating Quartiles**: Determine thresholds for categorizing sales performance.
+    - Q1 (First Quartile): Represents the 25th percentile of the units_sold data.
+    - Q3 (Third Quartile): Represents the 75th percentile of the units_sold data.
+3. **Creating Nominal Attribute**: Create `units_sold_categories` to classify products based on sales performance.
+4. **Updating Class Index**: Add the `units_sold_categories` attribute to the dataset and update the class index.
+5. **Categorizing Instances**: Classify each instance based on the value of the `units_sold` attribute.
+    - "Slow": Instances with units_sold values ≤ Q1.
+    - "Stable": Instances with units_sold values > Q1 but ≤ Q3.
+    - "Hot": Instances with units_sold values > Q3.
 
 ![The quartile distribution.](Picture/Picture5.png)
+    
+6. **Removing Original Attribute**: Remove the original `units_sold` attribute to streamline the dataset.
+7. **Randomizing and Splitting Dataset**: Divide the dataset into training (80%), test (20%), and validation (10 instances) sets.
+
+### Algorithm Implementation
+
+- **Naive Bayes**: Train on the training set, then predict the categories of instances in the test and validation sets. Evaluate the performance based on accuracy and other metrics.
+- **Random Forest**: Train on the training set, then predict the categories of instances in the test and validation sets. Evaluate the performance based on accuracy and other relevant metrics.
+
+Overall, the Random Forest algorithm outperformed the Naive Bayes algorithm in accuracy and overall performance metrics.
 
 ## Model Evaluation
 
@@ -87,8 +106,11 @@ Implemented prediction models using the Weka library to classify products into "
 The Random Forest model outperformed the Naive Bayes model in terms of accuracy, Kappa statistic, and error rates. However, Naive Bayes had a shorter runtime for both training and prediction.
 
 ![Accuracy Comparison](Picture/Picture9.png)
+
 ![Kappa Statistic Comparison](Picture/Picture10.png)
+
 ![Root Mean Squared Erroor Comparison](Picture/Picture11.png)
+
 ![Mean Absolute Error Comparison](Picture/Picture12.png)
 
 ## Conclusion
